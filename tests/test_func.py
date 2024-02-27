@@ -1,6 +1,5 @@
 import pytest
 import func
-
 @pytest.fixture
 def bank_fixture():
     return [
@@ -170,6 +169,6 @@ def bank_fixture_7():
     ]
 
 
-def load_data_operations(bank_fixture):
+def test_load_data_operations(bank_fixture):
     assert (func.load_data_operations(bank_fixture)) == bank_fixture
 
