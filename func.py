@@ -1,9 +1,8 @@
 import json
-from datetime import datetime
+# from datetime import datetime
+
 
 get_data_operations = "user_operations.json"
-
-
 def load_data_operations():
     """
     функция выводит список словарей операций в формате:
