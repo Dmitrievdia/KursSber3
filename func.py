@@ -3,36 +3,38 @@ import json
 
 
 get_data_operations = "user_operations.json"
-def load_data_operations():
+
+
+def load_data_operations(get_data_operations):
     """
     функция выводит список словарей операций в формате:
     'state': 'EXECUTED', 'date': '2018-08-06T16:22:54.643491', 'operationAmount': {'amount': '82946.19', 'currency':
     {'name': 'руб.', 'code': 'RUB'}}, 'description': 'Открытие вклада', 'to': 'Счет 12189246980267075758'}
     :return:list
     """
-    with open(get_data_operations, "rt", encoding="utf-8") as file:
+    with open(get_data_operations, encoding="utf-8") as file:
         data_operations = json.load(file)
-        # return data_operations
-        print(data_operations)
-print(load_data_operations())
+        return data_operations
+
+# load_data_operations(get_data_operations)
 
 
-# def sort_data_operations(data_operations):
-#     """
-#     функция сортирует операции и выводит список по наличию признака EXECUTED
-#     :param data_operations: список словарей [operations_data] из функции load_data_operations()
-#     :return: list
-#     """
-#     ex_operations = []
-#     for data_operation in data_operations:
-#         if data_operation.get('state') == 'EXECUTED':
-#             ex_operations.append(data_operation)
-#         else:
-#             continue
-#
-#     sorted_operations = sorted(ex_operations, key=lambda operation: operation['date'], reverse=True)
-#     five_last_operations = sorted_operations[:5]
-#     return five_last_operations
+def sort_data_operations(data_operations):
+    """
+    функция сортирует операции и выводит список по наличию признака EXECUTED
+    :param data_operations: список словарей [operations_data] из функции load_data_operations()
+    :return: list
+    """
+    ex_operations = []
+    for data_operation in data_operations:
+        if data_operation.get('state') == 'EXECUTED':
+            ex_operations.append(data_operation)
+        else:
+            continue
+
+    sorted_operations = sorted(ex_operations, key=lambda operation: operation['date'], reverse=True)
+    five_last_operations = sorted_operations[:5]
+    return five_last_operations
 #
 #
 # def reformat_date(date_str):
@@ -106,4 +108,5 @@ print(load_data_operations())
 #     amount = mask_amount(banc_info)
 #     result_str = (f"{date} {banc_info['description']}\n{adr}\n{amount}")
 #     return result_str
+
 

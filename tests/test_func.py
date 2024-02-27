@@ -1,7 +1,9 @@
-import pytest
 import func
+import pytest
+
+
 @pytest.fixture
-def bank_fixture():
+def bank_fixture_1():
     return [
         {
             "id": 441945886,
@@ -169,6 +171,6 @@ def bank_fixture_7():
     ]
 
 
-def test_load_data_operations(bank_fixture):
-    assert (func.load_data_operations(bank_fixture)) == bank_fixture
+def test_sort_data_operations(bank_fixture_1):
+    assert len(func.load_data_operations(bank_fixture_1)) == 5
 
