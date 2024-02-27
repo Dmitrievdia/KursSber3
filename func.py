@@ -1,5 +1,6 @@
 import json
-# from datetime import datetime
+from datetime import datetime
+from dateutil.parser import parse
 
 
 get_data_operations = "user_operations.json"
@@ -12,38 +13,39 @@ def load_data_operations():
     """
     with open(get_data_operations, "rt", encoding="utf-8") as file:
         data_operations = json.load(file)
-        # return data_operations
-        print(data_operations)
-print(load_data_operations())
+        return data_operations
+        # print(data_operations)
+# print(load_data_operations())
 
 
-# def sort_data_operations(data_operations):
-#     """
-#     функция сортирует операции и выводит список по наличию признака EXECUTED
-#     :param data_operations: список словарей [operations_data] из функции load_data_operations()
-#     :return: list
-#     """
-#     ex_operations = []
-#     for data_operation in data_operations:
-#         if data_operation.get('state') == 'EXECUTED':
-#             ex_operations.append(data_operation)
-#         else:
-#             continue
-#
-#     sorted_operations = sorted(ex_operations, key=lambda operation: operation['date'], reverse=True)
-#     five_last_operations = sorted_operations[:5]
-#     return five_last_operations
-#
-#
-# def reformat_date(date_str):
-#     """
-#     функция преобразует дату "date: 2019-08-26T10:50:58.294041" в формат "4.10.2018"
-#     :param date_str: 2019-08-26T10:50:58.294041 str
-#     :return:4.10.2018 str
-#     """
-#     date_of_operation = datetime.strptime(date_str, "%Y-%m-%d")
-#     return date_of_operation.strftime("%d.%m.%Y")
-#
+def sort_data_operations(data_operations):
+    """
+    функция сортирует операции и выводит список по наличию признака EXECUTED
+    :param data_operations: список словарей [operations_data] из функции load_data_operations()
+    :return: list
+    """
+    ex_operations = []
+    for data_operation in data_operations:
+        if data_operation.get('state') == 'EXECUTED':
+            ex_operations.append(data_operation)
+        else:
+            continue
+
+    sorted_operations = sorted(ex_operations, key=lambda operation: operation['date'], reverse=True)
+    five_last_operations = sorted_operations[:5]
+    return five_last_operations
+
+
+def reformat_date(date_str):
+    """
+    функция преобразует дату "date: 2019-08-26T10:50:58.294041" в формат "4.10.2018"
+    :param date_str: 2019-08-26T10:50:58.294041 str
+    :return:4.10.2018 str
+    """
+    # date_of_operation = datetime.strptime(date_str, "%Y-%m-%d")
+    date_of_operation = parse(date_str)
+    return date_of_operation.strftime("%d.%m.%Y")
+
 #
 # def mask_card_number(operate_info):
 #     """
