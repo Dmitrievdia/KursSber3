@@ -15,7 +15,5 @@ def main():
     sorted_data = sort_data_operations(data)
     for data in sorted_data:
         print(show_info(data))
-
-
-if __name__ == '__main__':
-    print(main())
+# if __name__ == '__main__':
+#     print(main())
