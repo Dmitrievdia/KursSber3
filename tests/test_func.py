@@ -1,9 +1,9 @@
-import pytest
 import func
+import pytest
 
 
 @pytest.fixture
-def bank_fixture():
+def operations():
     return [
         {
             "id": 441945886,
@@ -51,6 +51,21 @@ def bank_fixture():
             "to": "Счет 11776614605963066702"
         },
         {
+            "id": 594226727,
+            "state": "CANCELED",
+            "date": "2018-09-12T21:27:25.241689",
+            "operationAmount": {
+                "amount": "67314.70",
+                "currency": {
+                    "name": "руб.",
+                    "code": "RUB"
+                }
+            },
+            "description": "Перевод организации",
+            "from": "Visa Platinum 1246377376343588",
+            "to": "Счет 14211924144426031657"
+        },
+        {
             "id": 587085106,
             "state": "EXECUTED",
             "date": "2018-03-23T10:45:06.972075",
@@ -79,62 +94,20 @@ def bank_fixture():
             "from": "Счет 19708645243227258542",
             "to": "Счет 75651667383060284188"
         },
-        {
-            "id": 594226727,
-            "state": "CANCELED",
-            "date": "2018-09-12T21:27:25.241689",
-            "operationAmount": {
-                "amount": "67314.70",
-                "currency": {
-                    "name": "руб.",
-                    "code": "RUB"
-                }
-            },
-            "description": "Перевод организации",
-            "from": "Visa Platinum 1246377376343588",
-            "to": "Счет 14211924144426031657"
-        },
-        {
-            "id": 615064591,
-            "state": "CANCELED",
-            "date": "2018-10-14T08:21:33.419441",
-            "operationAmount": {
-                "amount": "77751.04",
-                "currency": {
-                    "name": "руб.",
-                    "code": "RUB"
-                }
-            },
-            "description": "Перевод с карты на счет",
-            "from": "Maestro 3928549031574026",
-            "to": "Счет 84163357546688983493"
-        },
         {}
     ]
 
 
 @pytest.fixture
-def bank_fixture_2():
-    return "Maestro 1596837868705199"
+def operations_1():
+    return {
+        "from": "Maestro 1596837868705199",
+        "to": "Счет 64686473678894779589"
+    }
 
 
 @pytest.fixture
-def bank_fixture_3():
-    return "Счет 84163357546688983493"
-
-
-@pytest.fixture
-def bank_fixture_4():
-    return "Unknown"
-
-
-@pytest.fixture
-def bank_fixture_5():
-    return "2019-08-26"
-
-
-@pytest.fixture
-def bank_fixture_6():
+def operations_2():
     return {
         "id": 441945886,
         "state": "EXECUTED",
@@ -142,8 +115,8 @@ def bank_fixture_6():
         "operationAmount": {
             "amount": "31957.58",
             "currency": {
-                "name": "руб.",
-                "code": "RUB"
+                "name": "USD",
+                "code": "USD"
             }
         },
         "description": "Перевод организации",
@@ -153,24 +126,50 @@ def bank_fixture_6():
 
 
 @pytest.fixture
-def bank_fixture_7():
-    return [{
-        "id": 441945886,
-        "state": "EXECUTED",
-        "date": "2019-12-08T10:50:58.294041",
-        "operationAmount": {
-            "amount": "41096.24",
-            "currency": {
-                "name": "USD",
-                "code": "USD"
-            }
-        },
-        "description": "Открытие вклада",
-        "to": "Счет 64686473678894775907"
-    }
-    ]
+def operations_3():
+    return {
+            "id": 587085106,
+            "state": "EXECUTED",
+            "date": "2018-03-23T10:45:06.972075",
+            "operationAmount": {
+                "amount": "48223.05",
+                "currency": {
+                    "name": "руб.",
+                    "code": "RUB"
+                }
+            },
+            "description": "Открытие вклада",
+            "to": "Счет 41421565395219882431"
+        }
 
 
-def test_load_data_operations(bank_fixture):
-    assert (func.load_data_operations(bank_fixture)) == bank_fixture
+@pytest.fixture
+def operations_4():
+    return "2018-03-23T10:45:06.972075"
 
+
+def test_sort_data_operations(operations):
+    assert len(func.sort_data_operations(operations)) == 5
+
+
+def test_mask_card_number():
+    assert func.mask_card_number("Maestro 1596837868705199") == "Maestro 15968 37** ****5199"
+    assert func.mask_card_number("Счет 64686473678894779589") == "Счет **9589"
+
+
+def test_mask_address(operations_2, operations_3):
+    assert func.mask_adress(operations_2) == 'Maestro 15968 37** ****5199 -> Счет **9589'
+    assert func.mask_adress(operations_3) == 'default -> Счет **2431'
+
+
+def test_mask_amount(operations_2, operations_3):
+    assert func.mask_amount(operations_2) == '31957.58 USD'
+    assert func.mask_amount(operations_3) == '48223.05 руб.'
+
+
+def test_reformat_date(operations_4):
+    assert func.reformat_date(operations_4) == '23.03.2018'
+
+
+def test_show_info(operations_3):
+    assert func.show_info(operations_3) == '\n23.03.2018 Открытие вклада\ndefault -> Счет **2431\n48223.05 руб.'
