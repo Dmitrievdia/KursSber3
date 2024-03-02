@@ -11,6 +11,8 @@ from dateutil.parser import parse
 
 
 get_data_operations = "user_operations.json"
+
+
 def load_data_operations():
     """
     функция выводит список словарей операций в формате:
@@ -21,10 +23,6 @@ def load_data_operations():
     with open(get_data_operations, "rt", encoding="utf-8") as file:
         data_operations = json.load(file)
         return data_operations
-        # print(data_operations)
-
-
-# print(load_data_operations())
 
 
 def sort_data_operations(data_operations):
@@ -51,12 +49,8 @@ def reformat_date(date_str):
     :param date_str: 2019-08-26T10:50:58.294041 str
     :return:4.10.2018 str
     """
-    # date_of_operation = datetime.strptime(date_str, "%Y-%m-%d")
     date_of_operation = parse(date_str.split("T")[0])
     return date_of_operation.strftime("%d.%m.%Y")
-
-
-# reformat_date("2019-08-26T10:50:58.294041")
 
 
 def mask_card_number(operate_info):
@@ -76,11 +70,6 @@ def mask_card_number(operate_info):
         card_number = card_number[:5] + " " + card_number[5:7] + "** ****" + card_number[-4:]
     masked_creds = " ".join([bank_name, card_number])
     return masked_creds
-    # print(masked_creds)
-
-
-# mask_card_number("Счет 64686473678894779589")
-# mask_card_number("Maestro Card 1596837868705199")
 
 
 def mask_adress(banc_info: dict) -> str:
@@ -97,7 +86,6 @@ def mask_adress(banc_info: dict) -> str:
         to_card = mask_card_number(to_card)
     result_str = f"{from_card} -> {to_card}"
     return result_str
-    # print(result_str)
 
 
 def mask_amount(banc_info: dict) -> str:
