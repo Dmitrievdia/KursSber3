@@ -98,18 +98,57 @@ def operations():
     ]
 
 
-def my_operation():
+@pytest.fixture
+def operations_1():
     return {
-        # "from": "Maestro 1596837868705199",
+        "from": "Maestro 1596837868705199",
         "to": "Счет 64686473678894779589"
     }
 
 
-def test_load_data_operations():
+@pytest.fixture
+def operations_2():
+    return {
+        "id": 441945886,
+        "state": "EXECUTED",
+        "date": "2019-08-26T10:50:58.294041",
+        "operationAmount": {
+            "amount": "31957.58",
+            "currency": {
+                "name": "USD",
+                "code": "USD"
+            }
+        },
+        "description": "Перевод организации",
+        "from": "Maestro 1596837868705199",
+        "to": "Счет 64686473678894779589"
+    }
 
 
+@pytest.fixture
+def operations_3():
+    return {
+            "id": 587085106,
+            "state": "EXECUTED",
+            "date": "2018-03-23T10:45:06.972075",
+            "operationAmount": {
+                "amount": "48223.05",
+                "currency": {
+                    "name": "руб.",
+                    "code": "RUB"
+                }
+            },
+            "description": "Открытие вклада",
+            "to": "Счет 41421565395219882431"
+        }
 
-def test_sort_data_operations():
+
+@pytest.fixture
+def operations_4():
+    return "2018-03-23T10:45:06.972075"
+
+
+def test_sort_data_operations(operations):
     assert len(func.sort_data_operations(operations)) == 5
 
 
@@ -118,6 +157,19 @@ def test_mask_card_number():
     assert func.mask_card_number("Счет 64686473678894779589") == "Счет **9589"
 
 
-def test_mask_address(my_operation):
-    assert func.mask_adress(my_operation) == 'Maestro 15968 37** ****5199 -> Счет **9589'
-    assert func.mask_adress(my_operation) == 'default -> Счет **9589'
+def test_mask_address(operations_2, operations_3):
+    assert func.mask_adress(operations_2) == 'Maestro 15968 37** ****5199 -> Счет **9589'
+    assert func.mask_adress(operations_3) == 'default -> Счет **2431'
+
+
+def test_mask_amount(operations_2, operations_3):
+    assert func.mask_amount(operations_2) == '31957.58 USD'
+    assert func.mask_amount(operations_3) == '48223.05 руб.'
+
+
+def test_reformat_date(operations_4):
+    assert func.reformat_date(operations_4) == '23.03.2018'
+
+
+def test_show_info(operations_3):
+    assert func.show_info(operations_3) == '\n23.03.2018 Открытие вклада\ndefault -> Счет **2431\n48223.05 руб.'
